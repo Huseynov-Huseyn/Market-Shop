@@ -1,9 +1,7 @@
-package az.developia.marketshop;
+package az.developia.marketshop.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -14,15 +12,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "people_id", length = 20)
-	private int peopleID;
 
+	@Id
+	@Column(columnDefinition = "VARCHAR(20)")
 	private String username;
 
 	private String password;
 
-	private String enabled;
+	private Integer enabled;
 
+	private String type;
+
+	@Column(columnDefinition = "VARCHAR(60)")
+	private String email;
 }
