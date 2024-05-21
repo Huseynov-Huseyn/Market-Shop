@@ -1,6 +1,7 @@
 package az.developia.marketshop.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import az.developia.marketshop.entity.UserEntity;
-import az.developia.marketshop.repository.UserRepository;
+import az.developia.marketshop.exception.OurRuntimeException;
+import az.developia.marketshop.request.UserAddRequest;
 import az.developia.marketshop.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,6 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class UserRestController {
-
-	private final UserRepository repository;
 	private final UserService service;
 
 	@GetMapping
@@ -30,8 +29,12 @@ public class UserRestController {
 	}
 
 	@PostMapping(path = "/add")
-	public UserEntity addUser(@Valid @RequestBody UserEntity entity) {
-		repository.save(entity);
-		return entity;
+	public ResponseEntity<Object> addUser(@Valid @RequestBody UserAddRequest request, BindingResult br) {
+		if (br.hasErrors()) {
+			throw new OurRuntimeException(br, "Məlumatın tamlığı pozulub!");
+		}
+		ResponseEntity<Object> save = service.save(request);
+
+		return save;
 	}
 }
