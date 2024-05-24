@@ -10,7 +10,9 @@ public class MarketShopApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MarketShopApplication.class, args);
 
-		System.out.println("Hello world!");
+		System.out.println("--------------");
+		System.out.println("Bazar olsun !");
+		System.out.println("--------------");
 	}
 
 	@Bean

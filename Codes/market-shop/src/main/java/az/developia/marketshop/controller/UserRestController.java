@@ -36,7 +36,7 @@ public class UserRestController {
 	@GetMapping(path = "/{username}")
 	public UserEntity getUserByUsername(@PathVariable String username) {
 		if (username == null) {
-			throw new OurRuntimeException(null, "Id boş yazmaq olmaz!");
+			throw new OurRuntimeException(null, "Usernamei boş yazmaq olmaz!");
 		}
 		UserEntity response = service.findByUsername(username);
 		return response;
