@@ -19,4 +19,5 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
 
 	@Query(value = "SELECT * FROM product WHERE category=?1", nativeQuery = true)
 	List<ProductEntity> findAllByCategory(String category);
+
 }

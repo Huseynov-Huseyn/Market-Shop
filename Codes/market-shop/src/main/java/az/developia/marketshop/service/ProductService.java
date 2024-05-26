@@ -12,11 +12,13 @@ import az.developia.marketshop.entity.ProductEntity;
 import az.developia.marketshop.exception.OurRuntimeException;
 import az.developia.marketshop.repository.ProductRepository;
 import az.developia.marketshop.request.ProductAddRequest;
+import az.developia.marketshop.request.ProductUpdateRequest;
 import az.developia.marketshop.response.ProductAddResponse;
 import az.developia.marketshop.response.ProductCategoryResponse;
 import az.developia.marketshop.response.ProductDeleteResponse;
 import az.developia.marketshop.response.ProductGetByCategoryResponse;
 import az.developia.marketshop.response.ProductResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -52,7 +54,7 @@ public class ProductService {
 
 			List<ProductEntity> allByCategory = repository.findAllByCategory(category);
 			ProductCategoryResponse response = new ProductCategoryResponse();
-			List<ProductGetByCategoryResponse> responseList = new ArrayList();
+			List<ProductGetByCategoryResponse> responseList = new ArrayList<ProductGetByCategoryResponse>();
 			for (ProductEntity productEntity : allByCategory) {
 				ProductGetByCategoryResponse responseMini = new ProductGetByCategoryResponse();
 				mapper.map(productEntity, responseMini);
@@ -90,6 +92,24 @@ public class ProductService {
 		} else {
 			throw new OurRuntimeException(null, "Bu Idli produkt mövcud deyil!");
 		}
+	}
+
+	public boolean updateProduct(@Valid ProductUpdateRequest request) {
+		Optional<ProductEntity> byId = repository.findById(request.getId());
+
+		if (byId != null) {
+
+			ProductEntity entity = new ProductEntity();
+			ProductEntity oldProduct = byId.get();
+			mapper.map(oldProduct, entity);
+			mapper.map(request, entity);
+			repository.save(entity);
+		} else {
+			throw new OurRuntimeException(null, "Bu idli produkt mövcud deyil");
+		}
+
+		return true;
+
 	}
 
 }
