@@ -45,4 +45,7 @@ public class ProductUpdateRequest {
 	@Column(columnDefinition = "VARCHAR(30)")
 	private String category;
 
+	@Min(value = 10000000000L, message = "10000000000L ve ya 10000000000L dan yuxarı sayda olmalıdır")
+	@Max(value = 99999999999L, message = "99999999999L ve ya 99999999999L aşağı	 sayda olmalıdır")
+	private long barcod;
 }

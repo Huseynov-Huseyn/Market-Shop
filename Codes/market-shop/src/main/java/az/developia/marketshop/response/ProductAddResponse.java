@@ -14,8 +14,10 @@ import lombok.NoArgsConstructor;
 public class ProductAddResponse {
 	private String name;
 	private String price;
+	private Integer amount;
 	private Date releaseDate;
 	private Date expirationDate;
 	private String category;
+	private long barcod;
 
 }

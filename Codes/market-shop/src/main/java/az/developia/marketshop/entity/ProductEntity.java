@@ -12,17 +12,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "product")
 @Setter
 @Getter
+@ToString
 public class ProductEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(columnDefinition = "VARCHAR(80)", unique = true)
+	@Column(columnDefinition = "VARCHAR(80)")
 	private String name;
 
 	@Column(columnDefinition = "VARCHAR(6)")
@@ -32,7 +34,7 @@ public class ProductEntity {
 	private String price;
 
 	@Column(columnDefinition = "VARCHAR(6)")
-	private String amount;
+	private Integer amount;
 
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private Date releaseDate;
@@ -43,7 +45,13 @@ public class ProductEntity {
 	@Column(columnDefinition = "VARCHAR(30)")
 	private String category;
 
-	public Boolean validate() { // <-- create validation method for prevent from null issue
-		return this.id == null;
+	@Column(name = "barcod", nullable = false, unique = true)
+	private Long barcod;
+
+	public void setBarcod(Long barcod) {
+		if (barcod != null && (barcod < 10000000000L || barcod > 99999999999L)) {
+			throw new IllegalArgumentException("Barcod must be an 11-digit number.");
+		}
+		this.barcod = barcod;
 	}
 }

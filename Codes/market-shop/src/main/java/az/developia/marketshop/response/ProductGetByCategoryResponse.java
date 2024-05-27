@@ -17,4 +17,5 @@ public class ProductGetByCategoryResponse {
 	private Date releaseDate;
 	private Date expirationDate;
 	private String category;
+	private long barcod;
 }

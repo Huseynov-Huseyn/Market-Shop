@@ -69,9 +69,22 @@ public class ProductService {
 	}
 
 	public ResponseEntity<ProductAddResponse> addProduct(ProductAddRequest request) {
-		if (repository.findByName(request.getName()).isPresent()) {
-			throw new OurRuntimeException(null, "Bu adda Məhsul var!");
+		if (repository.findByBarcod(request.getBarcod()).isPresent()) {
+			ProductEntity oldProduct = repository.findByBarcod(request.getBarcod()).get();
+			ProductUpdateRequest update = new ProductUpdateRequest();
+			mapper.map(oldProduct, update);
+			request.setAmount(request.getAmount() + oldProduct.getAmount());
+			update.setAmount(request.getAmount());
+			if (updateProduct(update)) {
+				ProductAddResponse response = new ProductAddResponse();
+				mapper.map(update, response);
+				return ResponseEntity.ok(response);
+
+			} else {
+				throw new OurRuntimeException(null, "Produktun sayinin artirilmasinda ugursuzluq oldu");
+			}
 		}
+
 		ProductEntity entity = new ProductEntity();
 		mapper.map(request, entity);
 		repository.save(entity);
@@ -95,12 +108,11 @@ public class ProductService {
 	}
 
 	public boolean updateProduct(@Valid ProductUpdateRequest request) {
-		Optional<ProductEntity> byId = repository.findById(request.getId());
 
-		if (byId != null) {
+		if (repository.findById(request.getId()).isPresent()) {
 
 			ProductEntity entity = new ProductEntity();
-			ProductEntity oldProduct = byId.get();
+			ProductEntity oldProduct = repository.findById(request.getId()).get();
 			mapper.map(oldProduct, entity);
 			mapper.map(request, entity);
 			repository.save(entity);
