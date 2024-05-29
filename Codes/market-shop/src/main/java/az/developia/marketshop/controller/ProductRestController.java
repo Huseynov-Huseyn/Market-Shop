@@ -1,7 +1,5 @@
 package az.developia.marketshop.controller;
 
-import java.util.Optional;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import az.developia.marketshop.entity.ProductEntity;
 import az.developia.marketshop.exception.OurRuntimeException;
 import az.developia.marketshop.request.ProductAddRequest;
+import az.developia.marketshop.request.ProductDecreaseUpdateRequest;
 import az.developia.marketshop.request.ProductUpdateRequest;
 import az.developia.marketshop.response.ProductAddResponse;
 import az.developia.marketshop.response.ProductDeleteResponse;
@@ -39,12 +38,12 @@ public class ProductRestController {
 	}
 
 	@GetMapping(path = "/{id}")
-	public Optional<ProductEntity> getProductById(@PathVariable Integer id) {
+	public ProductEntity getProductById(@PathVariable Integer id) {
 		if (id <= 0 || id == null) {
 			throw new OurRuntimeException(null, "Id boş yazmaq olmaz!");
 		}
 
-		Optional<ProductEntity> productById = service.getProductById(id);
+		ProductEntity productById = service.getProductById(id).get();
 		return productById;
 
 	}
@@ -83,7 +82,10 @@ public class ProductRestController {
 	}
 
 	@PutMapping(path = "/update")
-	public boolean updateProduct(@Valid @RequestBody ProductUpdateRequest request) {
+	public boolean updateProduct(@Valid @RequestBody ProductUpdateRequest request, BindingResult br) {
+		if (br.hasErrors()) {
+			throw new OurRuntimeException(br, "Məhsulun məlumatının tamlığı pozulub!");
+		}
 		Integer id = request.getId();
 		if (id <= 0 || id == null) {
 			throw new OurRuntimeException(null, "Id boş yazmaq olmaz!");
@@ -93,6 +95,16 @@ public class ProductRestController {
 			throw new OurRuntimeException(null, "Produktun adını boş qoymaq olmaz!");
 		}
 		boolean updateProduct = service.updateProduct(request);
+		return updateProduct;
+	}
+
+	@PutMapping(path = "/decrease")
+	public boolean updateDecreaseProduct(@Valid @RequestBody ProductDecreaseUpdateRequest request, BindingResult br) {
+		if (br.hasErrors()) {
+			throw new OurRuntimeException(br, "Məhsulun məlumatının tamlığı pozulub!");
+		}
+
+		boolean updateProduct = service.updateDecreaseProduct(request);
 		return updateProduct;
 	}
 

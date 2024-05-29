@@ -12,6 +12,7 @@ import az.developia.marketshop.entity.ProductEntity;
 import az.developia.marketshop.exception.OurRuntimeException;
 import az.developia.marketshop.repository.ProductRepository;
 import az.developia.marketshop.request.ProductAddRequest;
+import az.developia.marketshop.request.ProductDecreaseUpdateRequest;
 import az.developia.marketshop.request.ProductUpdateRequest;
 import az.developia.marketshop.response.ProductAddResponse;
 import az.developia.marketshop.response.ProductCategoryResponse;
@@ -122,6 +123,33 @@ public class ProductService {
 
 		return true;
 
+	}
+
+	public boolean updateDecreaseProduct(@Valid ProductDecreaseUpdateRequest request) {
+		if (repository.findByBarcod(request.getBarcod()).isPresent()) {
+
+			ProductEntity entity = new ProductEntity();
+			ProductEntity oldProduct = repository.findByBarcod(request.getBarcod()).get();
+			if (oldProduct.getName().equals(request.getName())) {
+
+				if (oldProduct.getAmount() < request.getDecreaseAmount()) {
+					throw new OurRuntimeException(null,
+							"Bazadakı məhsul sayından çoxdur.Bazadakı məhsul sayı:" + oldProduct.getAmount());
+				}
+
+				mapper.map(oldProduct, entity);
+				entity.setAmount(oldProduct.getAmount() - request.getDecreaseAmount());
+				repository.save(entity);
+			} else {
+				System.out.println(oldProduct.getName());
+				System.out.println(request.getName());
+				throw new OurRuntimeException(null, "Ad doğru deyil");
+			}
+		} else {
+			throw new OurRuntimeException(null, "Bu barcodlu produkt mövcud deyil");
+		}
+
+		return true;
 	}
 
 }
