@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductService {
 	private final ProductRepository repository;
+	private final SoldedProductService soldedProductService;
 	private final ModelMapper mapper;
 
 	public ResponseEntity<Object> getProducts() {
@@ -71,18 +72,24 @@ public class ProductService {
 
 	public ResponseEntity<ProductAddResponse> addProduct(ProductAddRequest request) {
 		if (repository.findByBarcod(request.getBarcod()).isPresent()) {
-			ProductEntity oldProduct = repository.findByBarcod(request.getBarcod()).get();
-			ProductUpdateRequest update = new ProductUpdateRequest();
-			mapper.map(oldProduct, update);
-			request.setAmount(request.getAmount() + oldProduct.getAmount());
-			update.setAmount(request.getAmount());
-			if (updateProduct(update)) {
-				ProductAddResponse response = new ProductAddResponse();
-				mapper.map(update, response);
-				return ResponseEntity.ok(response);
+			ProductEntity productEntity = repository.findByBarcod(request.getBarcod()).get();
+			if (productEntity.getName().equals(request.getName())) {
+				ProductEntity oldProduct = repository.findByBarcod(request.getBarcod()).get();
+				ProductUpdateRequest update = new ProductUpdateRequest();
+				mapper.map(oldProduct, update);
+				request.setAmount(request.getAmount() + oldProduct.getAmount());
+				update.setAmount(request.getAmount());
+				if (updateProduct(update)) {
+					ProductAddResponse response = new ProductAddResponse();
+					mapper.map(update, response);
+					return ResponseEntity.ok(response);
+
+				} else {
+					throw new OurRuntimeException(null, "Produktun sayinin artirilmasinda ugursuzluq oldu");
+				}
 
 			} else {
-				throw new OurRuntimeException(null, "Produktun sayinin artirilmasinda ugursuzluq oldu");
+				throw new OurRuntimeException(null, "Barkod başqa produkta aiddir!");
 			}
 		}
 
@@ -136,13 +143,12 @@ public class ProductService {
 					throw new OurRuntimeException(null,
 							"Bazadakı məhsul sayından çoxdur.Bazadakı məhsul sayı:" + oldProduct.getAmount());
 				}
-
 				mapper.map(oldProduct, entity);
 				entity.setAmount(oldProduct.getAmount() - request.getDecreaseAmount());
 				repository.save(entity);
+				entity.setAmount(request.getDecreaseAmount());
+				soldedProductService.addSoldedProduct(entity);
 			} else {
-				System.out.println(oldProduct.getName());
-				System.out.println(request.getName());
 				throw new OurRuntimeException(null, "Ad doğru deyil");
 			}
 		} else {

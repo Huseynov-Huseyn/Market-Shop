@@ -103,6 +103,9 @@ public class ProductRestController {
 		if (br.hasErrors()) {
 			throw new OurRuntimeException(br, "Məhsulun məlumatının tamlığı pozulub!");
 		}
+		if (request.getDecreaseAmount() <= 0) {
+			throw new OurRuntimeException(null, "ən az 1 mal satılmalıdır!");
+		}
 
 		boolean updateProduct = service.updateDecreaseProduct(request);
 		return updateProduct;
