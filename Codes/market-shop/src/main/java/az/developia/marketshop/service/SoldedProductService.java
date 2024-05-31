@@ -2,6 +2,7 @@ package az.developia.marketshop.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import az.developia.marketshop.entity.ProductEntity;
 import az.developia.marketshop.entity.SoldedProductEntity;
 import az.developia.marketshop.exception.OurRuntimeException;
 import az.developia.marketshop.repository.SoldedProductRepository;
+import az.developia.marketshop.request.SoldedProductTimeIntervalRequest;
+import az.developia.marketshop.response.SoldedProductDeleteResponse;
 import az.developia.marketshop.response.SoldedProductResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -51,6 +54,46 @@ public class SoldedProductService {
 
 		response.setSoldedProducts(allByName);
 		return ResponseEntity.ok(response);
+	}
+
+	public ResponseEntity<Object> getSoldedProductByCategory(String category) {
+		if (repository.findAllByCategory(category).isEmpty()) {
+			throw new OurRuntimeException(null, "Category mövcud deyil!");
+		}
+
+		List<SoldedProductEntity> allByCategory = repository.findAllByCategory(category);
+
+		SoldedProductResponse response = new SoldedProductResponse();
+		response.setSoldedProducts(allByCategory);
+		// response.setUsername(securityService.findUsername());
+		return ResponseEntity.ok(response);
+
+	}
+
+	public SoldedProductDeleteResponse deleteSoldedProductById(Integer id) {
+		if (repository.findById(id).isPresent()) {
+			SoldedProductDeleteResponse response = new SoldedProductDeleteResponse();
+			Optional<SoldedProductEntity> byId = repository.findById(id);
+			mapper.map(byId.get(), response);
+			repository.deleteById(id);
+			return response;
+		} else {
+			throw new OurRuntimeException(null, "Bu Idli satılmış produkt mövcud deyil!");
+		}
+
+	}
+
+	public ResponseEntity<Object> getSoldedProductsByTimeInterval(SoldedProductTimeIntervalRequest request) {
+
+	    List<SoldedProductEntity> allByTime = repository.findAllByTimeInterval(request.getStartTime(), request.getStopTime());
+
+	    if (allByTime.isEmpty()) {
+	        throw new OurRuntimeException(null, "Bu zaman aralığında produkt satılmayıbdır");
+	    }
+
+	    SoldedProductResponse response = new SoldedProductResponse();
+	    response.setSoldedProducts(allByTime);
+	    return ResponseEntity.ok(response);
 	}
 
 }
