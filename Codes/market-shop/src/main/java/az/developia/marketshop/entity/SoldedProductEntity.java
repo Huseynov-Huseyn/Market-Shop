@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,9 +53,9 @@ public class SoldedProductEntity {
 	@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
 	private LocalDate expirationDate;
 
-	@JsonSerialize(using = LocalDateSerializer.class)
-	@JsonDeserialize(using = LocalDateDeserializer.class)
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
 	private LocalDateTime soldedDate;
 
 	@Column(columnDefinition = "VARCHAR(30)")
@@ -68,4 +70,6 @@ public class SoldedProductEntity {
 		}
 		this.barcod = barcod;
 	}
+
+	// Getter and Setter methods
 }

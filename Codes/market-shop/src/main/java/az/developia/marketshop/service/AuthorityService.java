@@ -1,6 +1,5 @@
 package az.developia.marketshop.service;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import az.developia.marketshop.exception.OurRuntimeException;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthorityService {
 	private final AuthorityRepository repository;
-	private final ModelMapper mapper;
 
 	public void updateUserUsername(String newUsername, String oldUsername) {
 		if (repository.countByUsername(newUsername) > 0) {

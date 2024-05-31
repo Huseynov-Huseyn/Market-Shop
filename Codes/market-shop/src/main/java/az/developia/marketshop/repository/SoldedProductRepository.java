@@ -15,8 +15,8 @@ import jakarta.transaction.Transactional;
 @Transactional
 public interface SoldedProductRepository extends JpaRepository<SoldedProductEntity, Integer> {
 
-	@Query(value = "SELECT * FROM product WHERE category=?1", nativeQuery = true)
-	List<ProductEntity> findAllByCategory(String category);
+	@Query(value = "SELECT * FROM `solded-product`  WHERE name=?1", nativeQuery = true)
+	List<SoldedProductEntity> findAllByName(String name);
 
 	Optional<ProductEntity> findByBarcod(long barcod);
 
