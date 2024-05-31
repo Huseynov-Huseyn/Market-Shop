@@ -1,6 +1,6 @@
 package az.developia.marketshop.request;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -36,10 +36,10 @@ public class ProductAddRequest {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Past
-	private Date releaseDate;
+	private LocalDate releaseDate;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date expirationDate;
+	private LocalDate expirationDate;
 
 	@Size(min = 2, max = 30, message = "Produktun kategoriyası min 2 max 30 olur")
 	@Column(columnDefinition = "VARCHAR(30)")

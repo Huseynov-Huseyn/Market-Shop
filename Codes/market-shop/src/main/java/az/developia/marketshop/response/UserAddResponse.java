@@ -16,6 +16,7 @@ public class UserAddResponse {
 	private String username;
 	private String type;
 	private String email;
+
 	private LocalDate registerDate;
 
 }

@@ -1,6 +1,6 @@
 package az.developia.marketshop.response;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,8 +15,8 @@ public class ProductAddResponse {
 	private String name;
 	private String price;
 	private Integer amount;
-	private Date releaseDate;
-	private Date expirationDate;
+	private LocalDate releaseDate;
+	private LocalDate expirationDate;
 	private String category;
 	private long barcod;
 

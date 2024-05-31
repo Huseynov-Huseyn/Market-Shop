@@ -1,9 +1,13 @@
 package az.developia.marketshop.entity;
 
-import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,14 +41,20 @@ public class SoldedProductEntity {
 	@Column(columnDefinition = "VARCHAR(6)")
 	private Integer amount;
 
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-	private Date releaseDate;
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+	private LocalDate releaseDate;
 
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-	private Date expirationDate;
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+	private LocalDate expirationDate;
 
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-	private LocalDate soldedDate;
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime soldedDate;
 
 	@Column(columnDefinition = "VARCHAR(30)")
 	private String category;

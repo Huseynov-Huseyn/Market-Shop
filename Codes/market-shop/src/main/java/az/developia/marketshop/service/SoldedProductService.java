@@ -1,6 +1,6 @@
 package az.developia.marketshop.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class SoldedProductService {
 	public void addSoldedProduct(ProductEntity productEntity) {
 		SoldedProductEntity soldedProductEntity = new SoldedProductEntity();
 		mapper.map(productEntity, soldedProductEntity);
-		soldedProductEntity.setSoldedDate(LocalDate.now());
+		soldedProductEntity.setSoldedDate(LocalDateTime.now());
 		soldedProductEntity.setId(0);
 		repository.save(soldedProductEntity);
 	}
