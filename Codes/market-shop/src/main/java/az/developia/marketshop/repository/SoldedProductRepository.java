@@ -24,7 +24,10 @@ public interface SoldedProductRepository extends JpaRepository<SoldedProductEnti
 
 	Optional<ProductEntity> findByBarcod(long barcod);
 
-	@Query(value = "SELECT * FROM `market-shop`.`solded-product` WHERE solded_date BETWEEN '?1' AND '?2'", nativeQuery = true)
-	List<SoldedProductEntity> findAllByTimeInterval(LocalDate start, LocalDate stop);
+	@Query(value = "SELECT * FROM `market-shop`.`solded-product` WHERE solded_date BETWEEN ?1 AND ?2", nativeQuery = true)
+	List<SoldedProductEntity> findAllByTimeInterval(LocalDate begin, LocalDate end);
+
+	@Query(value = "SELECT * FROM `market-shop`.`solded-product` WHERE category=?1 and solded_date BETWEEN ?2 AND ?3", nativeQuery = true)
+	List<SoldedProductEntity> findAllByCategoryAndTime(String category, LocalDate begin, LocalDate end);
 
 }

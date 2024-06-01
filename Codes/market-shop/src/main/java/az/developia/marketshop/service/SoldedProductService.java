@@ -1,5 +1,6 @@
 package az.developia.marketshop.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,6 @@ import az.developia.marketshop.entity.ProductEntity;
 import az.developia.marketshop.entity.SoldedProductEntity;
 import az.developia.marketshop.exception.OurRuntimeException;
 import az.developia.marketshop.repository.SoldedProductRepository;
-import az.developia.marketshop.request.SoldedProductTimeIntervalRequest;
 import az.developia.marketshop.response.SoldedProductDeleteResponse;
 import az.developia.marketshop.response.SoldedProductResponse;
 import lombok.RequiredArgsConstructor;
@@ -83,17 +83,30 @@ public class SoldedProductService {
 
 	}
 
-	public ResponseEntity<Object> getSoldedProductsByTimeInterval(SoldedProductTimeIntervalRequest request) {
+	public ResponseEntity<Object> getSoldedProductsByTimeInterval(LocalDate begin, LocalDate end) {
+		System.out.println(begin);
+		List<SoldedProductEntity> allByTime = repository.findAllByTimeInterval(begin, end);
+		if (allByTime.isEmpty()) {
+			throw new OurRuntimeException(null, "Bu zaman aralığında produkt satılmayıbdır");
+		}
+		SoldedProductResponse response = new SoldedProductResponse();
 
-	    List<SoldedProductEntity> allByTime = repository.findAllByTimeInterval(request.getStartTime(), request.getStopTime());
+		response.setSoldedProducts(allByTime);
+		return ResponseEntity.ok(response);
 
-	    if (allByTime.isEmpty()) {
-	        throw new OurRuntimeException(null, "Bu zaman aralığında produkt satılmayıbdır");
-	    }
+	}
 
-	    SoldedProductResponse response = new SoldedProductResponse();
-	    response.setSoldedProducts(allByTime);
-	    return ResponseEntity.ok(response);
+	public ResponseEntity<Object> getSoldedProductsByCategoryTimeInterval(String category, LocalDate begin,
+			LocalDate end) {
+		List<SoldedProductEntity> allByTime = repository.findAllByCategoryAndTime(category, begin, end);
+		if (allByTime.isEmpty()) {
+			throw new OurRuntimeException(null, "Bu zaman aralığında və bu kategoriyada produkt satılmayıbdır");
+		}
+		SoldedProductResponse response = new SoldedProductResponse();
+
+		response.setSoldedProducts(allByTime);
+		return ResponseEntity.ok(response);
+
 	}
 
 }
