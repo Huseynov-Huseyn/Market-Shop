@@ -3,6 +3,7 @@ package az.developia.marketshop.controller;
 import java.time.LocalDate;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ public class SoldedProductRestController {
 	private final SoldedProductService service;
 
 	@GetMapping(path = "/all")
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_SOLDED_PRODUCT')")
 	public ResponseEntity<Object> getSoldedProducts() {
 		ResponseEntity<Object> response = service.getSoldedProducts();
 		return response;
@@ -31,6 +33,7 @@ public class SoldedProductRestController {
 	}
 
 	@GetMapping(path = "/{name}")
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_SOLDED_PRODUCT')")
 	public ResponseEntity<Object> getSoldedProductsByName(@PathVariable String name) {
 		if (name == null) {
 			throw new OurRuntimeException(null, "Id boş yazmaq olmaz!");
@@ -41,6 +44,7 @@ public class SoldedProductRestController {
 	}
 
 	@GetMapping(path = "/all/{category}")
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_SOLDED_PRODUCT')")
 	public ResponseEntity<Object> getSoldedProductsByCategory(@PathVariable String category) {
 		if (category == null) {
 			throw new OurRuntimeException(null, "Category boş qoymaq olmaz!");
@@ -51,12 +55,14 @@ public class SoldedProductRestController {
 	}
 
 	@GetMapping(path = "/top-solded")
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_SOLDED_PRODUCT')")
 	public ResponseEntity<Object> getTopSoldedProducts() {
 		ResponseEntity<Object> response = service.getTopSoldedProducts();
 		return response;
 	}
 
 	@DeleteMapping(path = "/{id}")
+	@PreAuthorize(value = "hasAuthority('ROLE_DELETE_SOLDED_PRODUCT')")
 	public SoldedProductDeleteResponse deleteProduct(@PathVariable Integer id) {
 		if (id <= 0 || id == null) {
 			throw new OurRuntimeException(null, "Id boş yazmaq olmaz!");
@@ -68,6 +74,7 @@ public class SoldedProductRestController {
 	}
 
 	@PostMapping(path = "/begin/{begin}/end/{end}")
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_SOLDED_PRODUCT')")
 	public ResponseEntity<Object> getByTimeInterval(@PathVariable LocalDate begin, @PathVariable LocalDate end) {
 		if (begin == null || end == null) {
 			throw new OurRuntimeException(null, "Zamanı boş qoymaq olmaz!");
@@ -82,6 +89,7 @@ public class SoldedProductRestController {
 	}
 
 	@PostMapping(path = "/category/{category}/begin/{begin}/end/{end}")
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_SOLDED_PRODUCT')")
 	public ResponseEntity<Object> getByTimeInterval(@PathVariable String category, @PathVariable LocalDate begin,
 			@PathVariable LocalDate end) {
 		if (category == null) {

@@ -1,6 +1,7 @@
 package az.developia.marketshop.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,12 +29,14 @@ public class UserRestController {
 	private final UserService service;
 
 	@GetMapping
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_USER')")
 	public ResponseEntity<Object> getUser() {
 		ResponseEntity<Object> response = service.findAll();
 		return response;
 	}
 
 	@GetMapping(path = "/{username}")
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_USER')")
 	public UserEntity getUserByUsername(@PathVariable String username) {
 		if (username == null) {
 			throw new OurRuntimeException(null, "Usernamei boş yazmaq olmaz!");
@@ -43,6 +46,7 @@ public class UserRestController {
 	}
 
 	@PostMapping(path = "/add")
+	@PreAuthorize(value = "hasAuthority('ROLE_ADD_USER')")
 	public ResponseEntity<Object> addUser(@Valid @RequestBody UserAddRequest request, BindingResult br) {
 		if (br.hasErrors()) {
 			throw new OurRuntimeException(br, "Məlumatın tamlığı pozulub!");
@@ -52,6 +56,7 @@ public class UserRestController {
 	}
 
 	@DeleteMapping(path = "/{username}")
+	@PreAuthorize(value = "hasAuthority('ROLE_DELETE_USER')")
 	public UserEntity deleteByUsername(@PathVariable String username) {
 		if (username == null) {
 			throw new OurRuntimeException(null, "Id boş yazmaq olmaz!");
@@ -61,6 +66,7 @@ public class UserRestController {
 	};
 
 	@PutMapping(path = "/update")
+	@PreAuthorize(value = "hasAuthority('ROLE_UPDATE_USER')")
 	public boolean updateUser(@Valid @RequestBody UserUpdateRequest request) {
 		if (request.getNewUsername() == null || request.getUsername() == null) {
 			throw new OurRuntimeException(null, "İstifadəçi adını boş qoymaq olmaz!");

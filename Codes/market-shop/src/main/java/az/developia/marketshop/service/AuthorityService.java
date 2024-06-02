@@ -19,7 +19,15 @@ public class AuthorityService {
 		}
 	}
 
-	public void saveAuthority(String username) {
+	public void saveAdminAuthority(String username) {
+		if (username != null) {
+			repository.addAdminAut(username);
+		} else {
+			throw new OurRuntimeException(null, "Istifadəçi adını boş qoymaq olmaz!");
+		}
+	};
+
+	public void saveCustomerAuthority(String username) {
 		if (username != null) {
 			repository.addCustomerAut(username);
 		} else {
@@ -34,6 +42,6 @@ public class AuthorityService {
 		} else {
 			throw new OurRuntimeException(null, "Istifadəçi adını boş qoymaq olmaz!");
 		}
-	};
+	}
 
 }

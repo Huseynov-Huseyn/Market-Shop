@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
 	private final ProductRepository repository;
 	private final SoldedProductService soldedProductService;
+	private final SecurityService securityService;
 	private final ModelMapper mapper;
 
 	public ResponseEntity<Object> getProducts() {
@@ -38,7 +39,7 @@ public class ProductService {
 		ProductResponse response = new ProductResponse();
 
 		response.setProducts(allProduct);
-//		response.setUsername(securityService.findUsername());
+		response.setUsername(securityService.findUsername());
 		return ResponseEntity.ok(response);
 	}
 
@@ -63,7 +64,7 @@ public class ProductService {
 				responseList.add(responseMini);
 			}
 			response.setProducts(responseList);
-			// response.setUsername(securityService.findUsername());
+			response.setUsername(securityService.findUsername());
 			return ResponseEntity.ok(response);
 		} else {
 			throw new OurRuntimeException(null, "İstifadəçi mövcud deyil!");

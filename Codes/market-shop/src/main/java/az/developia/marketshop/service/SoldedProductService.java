@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class SoldedProductService {
-
+	private final SecurityService securityService;
 	private final SoldedProductRepository repository;
 	private final TopSoldedProductRepository topProductRepository;
 	private final ModelMapper mapper;
@@ -54,6 +54,7 @@ public class SoldedProductService {
 		SoldedProductResponse response = new SoldedProductResponse();
 
 		response.setSoldedProducts(all);
+		response.setUsername(securityService.findUsername());
 		return ResponseEntity.ok(response);
 
 	}
@@ -67,6 +68,7 @@ public class SoldedProductService {
 		SoldedProductResponse response = new SoldedProductResponse();
 
 		response.setSoldedProducts(allByName);
+		response.setUsername(securityService.findUsername());
 		return ResponseEntity.ok(response);
 	}
 
@@ -79,7 +81,7 @@ public class SoldedProductService {
 
 		SoldedProductResponse response = new SoldedProductResponse();
 		response.setSoldedProducts(allByCategory);
-		// response.setUsername(securityService.findUsername());
+		response.setUsername(securityService.findUsername());
 		return ResponseEntity.ok(response);
 
 	}
@@ -106,6 +108,8 @@ public class SoldedProductService {
 		SoldedProductResponse response = new SoldedProductResponse();
 
 		response.setSoldedProducts(allByTime);
+
+		response.setUsername(securityService.findUsername());
 		return ResponseEntity.ok(response);
 
 	}
@@ -119,6 +123,8 @@ public class SoldedProductService {
 		SoldedProductResponse response = new SoldedProductResponse();
 
 		response.setSoldedProducts(allByTime);
+
+		response.setUsername(securityService.findUsername());
 		return ResponseEntity.ok(response);
 
 	}
@@ -132,6 +138,8 @@ public class SoldedProductService {
 		TopSoldedProductResponse response = new TopSoldedProductResponse();
 
 		response.setSoldedProducts(all);
+
+		response.setUsername(securityService.findUsername());
 		return ResponseEntity.ok(response);
 
 	}

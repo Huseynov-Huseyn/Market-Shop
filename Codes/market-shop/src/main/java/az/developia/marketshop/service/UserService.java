@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import az.developia.marketshop.entity.UserEntity;
@@ -25,7 +26,8 @@ public class UserService {
 	private final UserRepository repository;
 	private final ModelMapper mapper;
 	private final AuthorityService authorityService;
-//	private final SecurityService securityService;
+	private final PasswordEncoder passwordEncoder;
+	private final SecurityService securityService;
 
 	public ResponseEntity<Object> findAll() {
 		List<UserEntity> allUsers = repository.findAll();
@@ -37,7 +39,7 @@ public class UserService {
 		UserResponse response = new UserResponse();
 
 		response.setUsers(allUsers);
-//		response.setUsername(securityService.findUsername());
+		response.setUsername(securityService.findUsername());
 		return ResponseEntity.ok(response);
 	}
 
@@ -63,7 +65,23 @@ public class UserService {
 		mapper.map(request, entity);
 		entity.setEnabled(1);
 		entity.setRegisterDate(LocalDate.now());
-		authorityService.saveAuthority(request.getUsername());
+		if (repository.findAll().isEmpty()) {
+			authorityService.saveAdminAuthority(request.getUsername());
+			request.setType("admin");
+			entity.setType("admin");
+		} else {
+
+			if (request.getType().equals("Admin") || request.getType().equals("admin")) {
+				authorityService.saveAdminAuthority(request.getUsername());
+			}
+			if (request.getType().equals("Customer") || request.getType().equals("customer")) {
+				authorityService.saveCustomerAuthority(request.getUsername());
+			}
+
+		}
+		String raw = request.getPassword();
+		String pass = "{bcrypt}" + passwordEncoder.encode(raw);
+		entity.setPassword(pass);
 		repository.save(entity);
 
 		UserAddResponse response = new UserAddResponse();
@@ -93,6 +111,9 @@ public class UserService {
 			UserEntity oldUser = repository.findById(oldUsername).get();
 			mapper.map(oldUser, entity);
 			mapper.map(request, entity);
+			String raw = request.getPassword();
+			String pass = "{bcrypt}" + passwordEncoder.encode(raw);
+			entity.setPassword(pass);
 
 			repository.updateMyUsername(oldUsername, newUsername);
 			entity.setUsername(newUsername);

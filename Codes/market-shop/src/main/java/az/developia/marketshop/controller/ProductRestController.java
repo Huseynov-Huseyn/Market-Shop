@@ -1,6 +1,7 @@
 package az.developia.marketshop.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,6 +32,7 @@ public class ProductRestController {
 	private final ProductService service;
 
 	@GetMapping(path = "/all")
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_PRODUCT')")
 	public ResponseEntity<Object> getProducts() {
 		ResponseEntity<Object> response = service.getProducts();
 		return response;
@@ -38,6 +40,7 @@ public class ProductRestController {
 	}
 
 	@GetMapping(path = "/{id}")
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_PRODUCT')")
 	public ProductEntity getProductById(@PathVariable Integer id) {
 		if (id <= 0 || id == null) {
 			throw new OurRuntimeException(null, "Id boş yazmaq olmaz!");
@@ -49,6 +52,7 @@ public class ProductRestController {
 	}
 
 	@GetMapping(path = "/all/{category}")
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_PRODUCT')")
 	public ResponseEntity<Object> getProductByCategory(@PathVariable String category) {
 		if (category == null) {
 			throw new OurRuntimeException(null, "Category boş qoymaq olmaz!");
@@ -59,6 +63,7 @@ public class ProductRestController {
 	}
 
 	@PostMapping(path = "/add")
+	@PreAuthorize(value = "hasAuthority('ROLE_ADD_PRODUCT')")
 	public ResponseEntity<ProductAddResponse> addProduct(@Valid @RequestBody ProductAddRequest request,
 			BindingResult br) {
 		if (br.hasErrors()) {
@@ -71,6 +76,7 @@ public class ProductRestController {
 	}
 
 	@DeleteMapping(path = "/{id}")
+	@PreAuthorize(value = "hasAuthority('ROLE_DELETE_PRODUCT')")
 	public ProductDeleteResponse deleteProduct(@PathVariable Integer id) {
 		if (id <= 0 || id == null) {
 			throw new OurRuntimeException(null, "Id boş yazmaq olmaz!");
@@ -82,6 +88,7 @@ public class ProductRestController {
 	}
 
 	@PutMapping(path = "/update")
+	@PreAuthorize(value = "hasAuthority('ROLE_UPDATE_PRODUCT')")
 	public boolean updateProduct(@Valid @RequestBody ProductUpdateRequest request, BindingResult br) {
 		if (br.hasErrors()) {
 			throw new OurRuntimeException(br, "Məhsulun məlumatının tamlığı pozulub!");
@@ -99,6 +106,7 @@ public class ProductRestController {
 	}
 
 	@PutMapping(path = "/decrease")
+	@PreAuthorize(value = "hasAuthority('ROLE_SELL_PRODUCT')")
 	public boolean updateDecreaseProduct(@Valid @RequestBody ProductDecreaseUpdateRequest request, BindingResult br) {
 		if (br.hasErrors()) {
 			throw new OurRuntimeException(br, "Məhsulun məlumatının tamlığı pozulub!");
