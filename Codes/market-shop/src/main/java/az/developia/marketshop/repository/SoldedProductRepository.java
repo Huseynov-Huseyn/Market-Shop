@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import az.developia.marketshop.entity.ProductEntity;
 import az.developia.marketshop.entity.SoldedProductEntity;
-import az.developia.marketshop.response.TopSoldedProducts;
 import jakarta.transaction.Transactional;
 
 @Repository
@@ -30,8 +29,5 @@ public interface SoldedProductRepository extends JpaRepository<SoldedProductEnti
 
 	@Query(value = "SELECT * FROM `market-shop`.`solded-product` WHERE category=?1 and solded_date BETWEEN ?2 AND ?3", nativeQuery = true)
 	List<SoldedProductEntity> findAllByCategoryAndTime(String category, LocalDate begin, LocalDate end);
-
-	@Query(value = "SELECT * FROM solded_product_summary;", nativeQuery = true)
-	List<TopSoldedProducts> findTopSolded();
 
 }
