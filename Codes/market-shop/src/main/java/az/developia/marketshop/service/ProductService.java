@@ -148,6 +148,7 @@ public class ProductService {
 				repository.save(entity);
 				entity.setAmount(request.getDecreaseAmount());
 				soldedProductService.addSoldedProduct(entity);
+				soldedProductService.addTopSoldedProduct(entity);
 			} else {
 				throw new OurRuntimeException(null, "Ad doğru deyil");
 			}

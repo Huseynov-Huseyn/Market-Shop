@@ -50,6 +50,12 @@ public class SoldedProductRestController {
 
 	}
 
+	@GetMapping(path = "/top-solded")
+	public ResponseEntity<Object> getTopSoldedProducts() {
+		ResponseEntity<Object> response = service.getTopSoldedProducts();
+		return response;
+	}
+
 	@DeleteMapping(path = "/{id}")
 	public SoldedProductDeleteResponse deleteProduct(@PathVariable Integer id) {
 		if (id <= 0 || id == null) {

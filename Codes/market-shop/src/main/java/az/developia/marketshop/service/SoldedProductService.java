@@ -11,10 +11,13 @@ import org.springframework.stereotype.Service;
 
 import az.developia.marketshop.entity.ProductEntity;
 import az.developia.marketshop.entity.SoldedProductEntity;
+import az.developia.marketshop.entity.TopSoldedProductEntity;
 import az.developia.marketshop.exception.OurRuntimeException;
 import az.developia.marketshop.repository.SoldedProductRepository;
+import az.developia.marketshop.repository.TopSoldedProductRepository;
 import az.developia.marketshop.response.SoldedProductDeleteResponse;
 import az.developia.marketshop.response.SoldedProductResponse;
+import az.developia.marketshop.response.TopSoldedProductResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class SoldedProductService {
 
 	private final SoldedProductRepository repository;
+	private final TopSoldedProductRepository topProductRepository;
 	private final ModelMapper mapper;
 
 	public void addSoldedProduct(ProductEntity productEntity) {
@@ -30,6 +34,16 @@ public class SoldedProductService {
 		soldedProductEntity.setSoldedDate(LocalDateTime.now());
 		soldedProductEntity.setId(0);
 		repository.save(soldedProductEntity);
+	}
+
+	public void addTopSoldedProduct(ProductEntity productEntity) {
+		TopSoldedProductEntity entity = new TopSoldedProductEntity();
+		mapper.map(productEntity, entity);
+		if (topProductRepository.findByName(productEntity.getName()).isPresent()) {
+			entity.setAmount(entity.getAmount() + topProductRepository.findByName(entity.getName()).get().getAmount());
+			topProductRepository.save(entity);
+		}
+		topProductRepository.save(entity);
 	}
 
 	public ResponseEntity<Object> getSoldedProducts() {
@@ -105,6 +119,19 @@ public class SoldedProductService {
 		SoldedProductResponse response = new SoldedProductResponse();
 
 		response.setSoldedProducts(allByTime);
+		return ResponseEntity.ok(response);
+
+	}
+
+	public ResponseEntity<Object> getTopSoldedProducts() {
+		List<TopSoldedProductEntity> all = topProductRepository.findAllSoldedProduct();
+		System.out.println(all);
+		if (all.isEmpty()) {
+			throw new OurRuntimeException(null, "Heç bir produkt satılmayıbdır!");
+		}
+		TopSoldedProductResponse response = new TopSoldedProductResponse();
+
+		response.setSoldedProducts(all);
 		return ResponseEntity.ok(response);
 
 	}
