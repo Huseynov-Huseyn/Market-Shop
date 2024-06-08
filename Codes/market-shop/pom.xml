@@ -141,6 +141,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>developia-final</finalName>
 	</build>
 
 </project>
