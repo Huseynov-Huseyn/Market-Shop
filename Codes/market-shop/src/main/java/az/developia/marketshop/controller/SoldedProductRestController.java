@@ -103,7 +103,7 @@ public class SoldedProductRestController {
 			throw new OurRuntimeException(null, "Bitiş vaxtı, başlama vaxtından əvvəl olammaz!");
 		}
 
-		ResponseEntity<Object> productByTime = service.getSoldedProductsByTimeInterval(begin, end);
+		ResponseEntity<Object> productByTime = service.getSoldedProductsByCategoryTimeInterval(category, begin, end);
 		return productByTime;
 	}
 
