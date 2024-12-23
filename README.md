@@ -86,6 +86,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 **Huseyn Huseynov**
 - Email: huseynhuseyn343@gmail.com
 - GitHub: [Huseynov-Huseyn](https://github.com/Huseynov-Huseyn)
+- LinkedIn: [Huseyn Huseynov](https://www.linkedin.com/in/huseynhuseynov-/)
 
 ---
 
