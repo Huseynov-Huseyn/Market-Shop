@@ -1,7 +1,5 @@
 # Market-Shop Project
 
-![Market-Shop Logo](https://via.placeholder.com/150)
-
 ## Description
 The Market-Shop project is a **normal trade application** built using Java and Spring Boot. This application simulates the functionality of a market, allowing users to manage products, customers, and sales efficiently. It is designed to demonstrate best practices in back-end development and object-oriented programming principles.
 
